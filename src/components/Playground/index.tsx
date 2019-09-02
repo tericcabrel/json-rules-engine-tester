@@ -30,8 +30,11 @@ class Playground extends React.Component<IPlaygroundProps, IPlaygroundState> {
       error: false,
       ruleEngineResults: []
     };
+
     this.handleEditorChange = this.handleEditorChange.bind(this);
     this.handleQueryChange = this.handleQueryChange.bind(this);
+    this.handleValidateClick = this.handleValidateClick.bind(this);
+    this.handleResetClick = this.handleResetClick.bind(this);
   }
 
   handleEditorChange(e: object) {
@@ -42,24 +45,27 @@ class Playground extends React.Component<IPlaygroundProps, IPlaygroundState> {
     this.setState({ query: e.currentTarget.value });
   }
 
-  handleValidateClick = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
+  async handleValidateClick(e: React.MouseEvent<HTMLButtonElement>): Promise<void> {
     e.preventDefault();
 
     const { content, query } = this.state;
 
-    // console.log(content);
     console.log(query);
 
     const isValidQuery: boolean = RuleEngineValidator.isValidQuery(query);
     if (isValidQuery) {
       const results = await RuleEngineValidator.validate(content);
-      console.log(results);
 
       this.setState({ ruleEngineResults: results });
     } else {
       this.setState({ error: true });
     }
   };
+
+  handleResetClick(e: React.MouseEvent<HTMLButtonElement>): void {
+    e.preventDefault();
+    this.setState({ error: false, ruleEngineResults: [], query: '', content: {} });
+  }
 
   render() {
     const { content, query, error, ruleEngineResults } = this.state;
@@ -80,7 +86,15 @@ class Playground extends React.Component<IPlaygroundProps, IPlaygroundState> {
             content={content}
             onChange={this.handleEditorChange}
           />
-          <div className="d-flex justify-content-center mt-3">
+          <div className="d-flex justify-content-between mt-3">
+            <Button
+              type="button"
+              color="danger"
+              className="w-25"
+              onClick={this.handleResetClick}
+            >
+              Reset
+            </Button>
             <Button
               type="button"
               color="primary"
@@ -100,7 +114,7 @@ class Playground extends React.Component<IPlaygroundProps, IPlaygroundState> {
                 onChange={(e) => this.handleQueryChange(e)}
                 value={query}
                 className="input-query"
-                placeholder="Enter the query here"
+                placeholder="You can provide many facts but just be sure to separate them with a comma (;)"
               />
             </Col>
             <Col className="result pl-0 pr-0">

@@ -11,7 +11,7 @@ class RuleEngineValidator {
       const queries: object[] = [];
 
       queryArray.forEach((q: string) => {
-        queries.push(JSON.parse(q));
+        queries.push(JSON.parse(q.trim()));
       });
 
       RuleEngineValidator.queries = queries;
