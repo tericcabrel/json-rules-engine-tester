@@ -1,9 +1,12 @@
 import React from 'react';
-import {Button, Col, Input, Row} from "reactstrap";
+import { Button, Col, Input, Row } from "reactstrap";
 
 import Editor from "../Editor";
+import * as constants from "../../utils/constants";
+import RuleEngineValidator from "../../utils/rule-engine-validator";
 
 import './playground.scss';
+import {RuleEngineResult} from "../../types";
 
 interface IPlaygroundProps {
 
@@ -11,52 +14,17 @@ interface IPlaygroundProps {
 
 interface IPlaygroundState {
   content: object,
-  query: string
+  query: string,
+  ruleEngineResults: RuleEngineResult[]
 }
-
-const rule = {
-  conditions: {
-    any: [{
-      all: [{
-        fact: 'gameDuration',
-        operator: 'equal',
-        value: 40
-      }, {
-        fact: 'personalFoulCount',
-        operator: 'greaterThanInclusive',
-        value: 5
-      }]
-    }, {
-      all: [{
-        fact: 'gameDuration',
-        operator: 'equal',
-        value: 48
-      }, {
-        fact: 'personalFoulCount',
-        operator: 'greaterThanInclusive',
-        value: 6
-      }]
-    }]
-  },
-  event: {  // define the event to fire when the conditions evaluate truthy
-    type: 'fouledOut',
-    params: {
-      message: 'Player has fouled out!'
-    }
-  }
-};
-
-let facts = {
-  personalFoulCount: 6,
-  gameDuration: 40
-};
 
 class Playground extends React.Component<IPlaygroundProps, IPlaygroundState> {
   constructor(props: IPlaygroundProps) {
     super(props);
     this.state = {
-      content: rule,
-      query: JSON.stringify(facts)
+      content: constants.rule,
+      query: JSON.stringify(constants.facts),
+      ruleEngineResults: []
     };
     this.handleEditorChange = this.handleEditorChange.bind(this);
     this.handleQueryChange = this.handleQueryChange.bind(this);
@@ -70,13 +38,21 @@ class Playground extends React.Component<IPlaygroundProps, IPlaygroundState> {
     this.setState({ query: e.currentTarget.value });
   }
 
-  handleValidateClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  handleValidateClick = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault();
 
     const { content, query } = this.state;
 
-    console.log(content);
+    // console.log(content);
     console.log(query);
+
+    const isValidQuery: boolean = RuleEngineValidator.isValidQuery(query);
+    if (isValidQuery) {
+      const results = await RuleEngineValidator.validate(content);
+      console.log(results);
+
+      this.setState({ ruleEngineResults: results });
+    }
   };
 
   render() {
