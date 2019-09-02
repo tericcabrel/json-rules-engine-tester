@@ -1,0 +1,17 @@
+.rule-engine-result-list {
+  list-style: none;
+  margin: 0;
+  padding: 15px;
+  li {
+    color: #fff;
+    padding: 5px;
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  li.success {
+    background-color: #28a745;
+  }
+  li.error {
+    background-color: #dc3545;
+  }
+}

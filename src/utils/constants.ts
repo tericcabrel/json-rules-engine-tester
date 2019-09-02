@@ -30,9 +30,6 @@ const rule = {
   }
 };
 
-let facts = {
-  personalFoulCount: 6,
-  gameDuration: 40
-};
+let facts = '{"personalFoulCount": 6, "gameDuration": 40};{"personalFoulCount": 4, "gameDuration": 32};{"personalFoulCount": 10, "gameDuration": 48}';
 
 export { facts, rule };

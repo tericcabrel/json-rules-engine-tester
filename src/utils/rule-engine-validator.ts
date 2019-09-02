@@ -1,6 +1,6 @@
 // @ts-ignore
 import { Engine } from 'json-rules-engine';
-import { RuleEngineResult } from "../types";
+import { RuleEngineResult } from "./types";
 
 class RuleEngineValidator {
   private static queries: object[];
@@ -9,6 +9,7 @@ class RuleEngineValidator {
     try {
       const queryArray: string[] = query.split(';');
       const queries: object[] = [];
+
       queryArray.forEach((q: string) => {
         queries.push(JSON.parse(q));
       });
@@ -40,10 +41,22 @@ class RuleEngineValidator {
 
     for (const query of RuleEngineValidator.queries) {
       const result = await RuleEngineValidator.validateFact(rule, query);
-      results.push({ fact: JSON.stringify(query), isValid: result });
+
+      results.push({
+        fact: RuleEngineValidator.sanitize(query),
+        isValid: result
+      });
     }
 
     return results;
+  }
+
+  private static sanitize(query: {[key: string]: any }): string {
+    if (query.hasOwnProperty('success-events')) {
+      delete query['success-events'];
+    }
+
+    return JSON.stringify(query);
   }
 }
 
