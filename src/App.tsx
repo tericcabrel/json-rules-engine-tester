@@ -16,7 +16,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <Navbar color="light" light expand="md">
+      <Navbar color="dark" dark={true} expand="md">
         <NavbarBrand href="/">JSON Rule Engine Tester</NavbarBrand>
         <NavbarToggler onClick={() => setIsOpen(!isOpen)} />
         <Collapse isOpen={isOpen} navbar>
