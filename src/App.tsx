@@ -22,7 +22,7 @@ const App: React.FC = () => {
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
             <NavItem>
-              <NavLink href="https://github.com/tericcabrel/reactstrap">GitHub</NavLink>
+              <NavLink href="https://github.com/tericcabrel/json-rule-engine-tester">GitHub</NavLink>
             </NavItem>
           </Nav>
         </Collapse>
